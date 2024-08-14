@@ -1,16 +1,42 @@
+import { useState } from "react";
 import "./newPostPage.scss";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import apiRequest from "../../lib/apiRequest";
 
 function NewPostPage() {
+  const [value, setValue] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const FormData = new FormData(e.target);
+    const inputs = Object.fromEntries(FormData);
+
+    console.log(inputs);
+
+    try {
+      const res = await apiRequest.post("/posts",{
+        postData:{},
+        
+      });
+    } catch (error) {
+      console.log(error);
+      setError(error);
+    }
+  };
+
   return (
     <div className="newPostPage">
       <div className="formContainer">
         <h1>Add New Post</h1>
         <div className="wrapper">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="item">
               <label htmlFor="title">Title</label>
               <input id="title" name="title" type="text" />
             </div>
+
             <div className="item">
               <label htmlFor="price">Price</label>
               <input id="price" name="price" type="number" />
@@ -21,6 +47,7 @@ function NewPostPage() {
             </div>
             <div className="item description">
               <label htmlFor="desc">Description</label>
+              <ReactQuill theme="snow" onChange={setValue} value={value} />
             </div>
             <div className="item">
               <label htmlFor="city">City</label>
@@ -101,6 +128,7 @@ function NewPostPage() {
               <input min={0} id="restaurant" name="restaurant" type="number" />
             </div>
             <button className="sendButton">Add</button>
+            {error && <span>{error}</span>}
           </form>
         </div>
       </div>
