@@ -8,7 +8,7 @@ import UploadWidget from "../../components/uploadWidget/UploadWidget";
 function ProfileUpdatePage() {
   const { currentUser, updateUser } = useContext(AuthContext);
   const [error, setError] = useState("");
-  const [avatar, setAvatar] = useState(currentUser.avatar);
+  const [avatar, setAvatar] = useState([]);
 
   const navigate = useNavigate();
 
@@ -23,14 +23,13 @@ function ProfileUpdatePage() {
         username,
         email,
         password,
-        avatar,
+        avatar:avatar[0]
       });
       updateUser(res.data);
-      // console.log(res.data);
       navigate("/profile");
-    } catch (error) {
-      console.log(error);
-      setError(error.reponse.data.message);
+    } catch (err) {
+      console.log(err);
+      setError(err.response.data.message);
     }
   };
 
@@ -52,9 +51,9 @@ function ProfileUpdatePage() {
             <label htmlFor="email">Email</label>
             <input
               id="email"
-              defaultValue={currentUser.email}
               name="email"
               type="email"
+              defaultValue={currentUser.email}
             />
           </div>
           <div className="item">
@@ -62,20 +61,20 @@ function ProfileUpdatePage() {
             <input id="password" name="password" type="password" />
           </div>
           <button>Update</button>
-          {error && <span>{error}</span>}
+          {error && <span>error</span>}
         </form>
       </div>
       <div className="sideContainer">
-        <img src={avatar || "/noavatar.jpg"} alt="" className="avatar" />
+        <img src={avatar[0] || currentUser.avatar || "/noavatar.jpg"} alt="" className="avatar" />
         <UploadWidget
           uwConfig={{
-            cloudName: "dh8rylu0t",
-            uploadPreset: "realEstate360",
+            cloudName: "lamadev",
+            uploadPreset: "estate",
             multiple: false,
-            maxImageFileSize: 200000,
+            maxImageFileSize: 2000000,
             folder: "avatars",
           }}
-          setAvatar={setAvatar}
+          setState={setAvatar}
         />
       </div>
     </div>
